@@ -10,7 +10,7 @@ import {Ownable} from "openzeppelin-contracts/contracts/access/Ownable.sol";
 
 import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
 
-import {IUnderlying} from "./IUnderlying.sol";
+import {IUnderlyingToken} from "./interfaces/IUnderlyingToken.sol";
 
 contract StakingVault is Ownable2Step, ERC4626 {
   uint256 public constant RAY = 1e27;
@@ -47,7 +47,7 @@ contract StakingVault is Ownable2Step, ERC4626 {
 
     require(cap >= totalAssetsAfter);
 
-    IUnderlying(asset()).burnFrom(caller, assets);
+    IUnderlyingToken(asset()).burnFrom(caller, assets);
     _mint(receiver, shares);
 
     emit Deposit(caller, receiver, assets, shares);
@@ -63,7 +63,7 @@ contract StakingVault is Ownable2Step, ERC4626 {
     if (caller != owner) _spendAllowance(owner, caller, shares);
 
     _burn(owner, shares);
-    IUnderlying(asset()).mint(receiver, assets);
+    IUnderlyingToken(asset()).mint(receiver, assets);
 
     emit Withdraw(caller, receiver, owner, assets, shares);
   }
