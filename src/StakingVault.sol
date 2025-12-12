@@ -12,6 +12,8 @@ import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
 
 import {IUnderlyingToken} from "./interfaces/IUnderlyingToken.sol";
 
+import {ErrorsLib} from "./libraries/ErrorsLib.sol";
+
 contract StakingVault is Ownable2Step, ERC4626 {
   uint256 public constant RAY = 1e27;
   uint256 public compoundFactorAccum = 1e27;
@@ -45,7 +47,7 @@ contract StakingVault is Ownable2Step, ERC4626 {
   function _deposit(address caller, address receiver, uint256 assets, uint256 shares) internal override {
     uint256 totalAssetsAfter = _convertToAssets(shares + totalSupply(), Math.Rounding.Ceil);
 
-    require(cap >= totalAssetsAfter);
+    require(cap >= totalAssetsAfter, ErrorsLib.CAP_EXCEEDED);
 
     IUnderlyingToken(asset()).burnFrom(caller, assets);
     _mint(receiver, shares);
@@ -99,7 +101,7 @@ contract StakingVault is Ownable2Step, ERC4626 {
   }
 
   function update(uint256 _newRate) external onlyOwner {
-    require(RAY > _newRate);
+    require(_newRate <= RAY, ErrorsLib.INVALID_RATE);
 
     uint256 accum = compoundFactorAccum * _compoundFactor();
 
