@@ -14,10 +14,10 @@ import {IUnderlyingToken} from "./interfaces/IUnderlyingToken.sol";
 
 import {ErrorsLib} from "./libraries/ErrorsLib.sol";
 import {EventsLib} from "./libraries/EventsLib.sol";
+import {RAY} from "./libraries/ConstantsLib.sol";
 
 contract StakingVault is Ownable2Step, ERC4626 {
-  uint256 public constant RAY = 1e27;
-  uint256 public compoundFactorAccum = 1e27;
+  uint256 public compoundFactorAccum = RAY;
   uint256 public currentRate;
   uint256 public lastUpdatedTimestamp;
   uint256 public cap;
