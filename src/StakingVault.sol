@@ -96,9 +96,9 @@ contract StakingVault is Ownable2Step, ERC4626 {
   // ---- Vault management ----
 
   function setCap(uint256 _newCap) external onlyOwner {
-    cap = _newCap;
-
     emit EventsLib.CapUpdate(cap, _newCap, block.timestamp);
+
+    cap = _newCap;
   }
 
   function update(uint256 _newRate) external onlyOwner {
@@ -108,9 +108,9 @@ contract StakingVault is Ownable2Step, ERC4626 {
 
     compoundFactorAccum = accum / RAY;
 
+    emit EventsLib.RateUpdate(currentRate, _newRate, block.timestamp);
+
     currentRate = _newRate;
     lastUpdatedTimestamp = block.timestamp;
-
-    emit EventsLib.RateUpdate(currentRate, _newRate, block.timestamp);
   }
 }
