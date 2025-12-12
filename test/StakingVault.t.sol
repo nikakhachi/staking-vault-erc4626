@@ -1,28 +1,17 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.13;
 
 import {Test} from "forge-std/Test.sol";
 import {StakingVault} from "../src/StakingVault.sol";
 import {IERC20} from "openzeppelin-contracts/contracts/interfaces/IERC20.sol";
 import {ERC20} from "openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
+import {MockedUnderlyingToken} from "./mocks/MockedUnderlyingToken.sol";
 
 import {console} from "forge-std/console.sol";
 
-contract MockStablecoin is ERC20 {
-  constructor() ERC20("Mock Stablecoin", "MST") {}
-
-  function mint(address to, uint256 amount) external {
-    _mint(to, amount);
-  }
-
-  function burnFrom(address from, uint256 amount) external {
-    _burn(from, amount);
-  }
-}
-
 contract StakingVaultTest is Test {
   StakingVault public vault;
-  MockStablecoin public stablecoin;
+  MockedUnderlyingToken public stablecoin;
   address public admin;
   address public user;
 
@@ -32,7 +21,7 @@ contract StakingVaultTest is Test {
     admin = address(0x1);
     user = address(0x2);
 
-    stablecoin = new MockStablecoin();
+    stablecoin = new MockedUnderlyingToken();
 
     vault = new StakingVault(admin, "Staking Vault", "SV", IERC20(address(stablecoin)));
 
