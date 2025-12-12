@@ -13,6 +13,7 @@ import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
 import {IUnderlyingToken} from "./interfaces/IUnderlyingToken.sol";
 
 import {ErrorsLib} from "./libraries/ErrorsLib.sol";
+import {EventsLib} from "./libraries/EventsLib.sol";
 
 contract StakingVault is Ownable2Step, ERC4626 {
   uint256 public constant RAY = 1e27;
@@ -98,6 +99,8 @@ contract StakingVault is Ownable2Step, ERC4626 {
 
   function setCap(uint256 _newCap) external onlyOwner {
     cap = _newCap;
+
+    emit EventsLib.CapUpdate(cap, _newCap, block.timestamp);
   }
 
   function update(uint256 _newRate) external onlyOwner {
@@ -109,5 +112,7 @@ contract StakingVault is Ownable2Step, ERC4626 {
 
     currentRate = _newRate;
     lastUpdatedTimestamp = block.timestamp;
+
+    emit EventsLib.RateUpdate(currentRate, _newRate, block.timestamp);
   }
 }
